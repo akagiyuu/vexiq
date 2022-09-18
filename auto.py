@@ -1,5 +1,6 @@
 from sunau import AUDIO_FILE_ENCODING_LINEAR_16
 from tkinter import W
+from webbrowser import get
 import vex
 import sys
 import drivetrain
@@ -54,6 +55,26 @@ shoot_motor = Motor(Ports.PORT11)
 color_sensor = Colorsensor(Ports.PORT8)
 # endregion
 
+class Helpers:
+    def move(direction, number_of_grid):
+        driver.drive_for(direction, GRID_SIZE * number_of_grid,
+                         INCHES, None, PERCENT, False)
+        # grid_pass = 0
+        # grids = math.floor(number_of_grid)
+
+        # while not driver.is_done() and grid_pass < grids:
+        #     if color_sensor.grayscale() <= BRIGHTNESS_THRESHOLD:
+        #         grid_pass += 1
+
+    def get_disk_from_dispenser(this, type: DispenserType):
+        if type == DispenserType.Purple:
+            pass
+        elif type == DispenserType.Blue:
+            arm_motor.spin_for(REVERSE, ANGLE_FOR_BLUE_DISPENSER)
+        elif type == DispenserType.Yellow:
+            pass
+    def shoot(time):
+        pass
 
 class AutoDrive:
     move_sequence = [
@@ -71,50 +92,56 @@ class AutoDrive:
         # [MoveType.Turn, 30]
         # [MoveType.Reverse, (1 + math.sqrt(2))]
         # [MoveType.Shoot, 2000]
-        [MoveType.Forward, 2.06], #Move until reach yellow dispenser
+        [MoveType.Forward, 2.06],  # Move until reach yellow dispenser
         [MoveType.GetDisk, DispenserType.Yellow],
         [MoveType.Reverse, 1],
         [MoveType.Turn, 135],
         [MoveType.Reverse, math.sqrt(2)],
         [MoveType.Turn, 45],
         [MoveType.Reverse, 2]
-        [MoveType.Shoot, 2],
+        [MoveType.Shoot, 2000],
+
         [MoveType.Forward, 1.5],
         [MoveType.Turn, 90],
-        [MoveType.Forward, 1.5],
+        [MoveType.Forward, 1],
+        [MoveType.GetDisk, DispenserType.Purple],
+        [MoveType.Turn, -135],
+        [MoveType.Forward, math.sqrt(2) / 2],
+        [MoveType.Turn, 45],
+        [MoveType.GetDisk, DispenserType.Blue],
+        [MoveType.Turn, 90 - math.degrees(math.atan(3))]
+        [MoveType.Reverse, math.sqrt(10)/2],
+        [MoveType.Turn, -(90 - math.degrees(math.atan(3)))]
+        [MoveType.Shoot, 2000]
+
+        [MoveType.Forward, 0.3],
+        [MoveType.Turn, -90],
+        [MoveType.Forward, 2.5],
+        [MoveType.Forward, 2 - 0.2],
+        [MoveType.GetDisk, DispenserType.Blue],
+        [MoveType.Reverse, 0.1],
+        [MoveType.Turn, - 90],
+        [MoveType.Forward, 0.5],
+        [MoveType.GetDisk, DispenserType.Purple],
+        [MoveType.Reverse, 1],
+        [MoveType.Turn, 90],
+        [MoveType.Reverse, 1.5],
+        [MoveType.Shoot, 2000]
     ]
 
-    def move(direction, number_of_grid):
-        driver.drive_for(direction, GRID_SIZE * number_of_grid,
-                         INCHES, None, PERCENT, False)
-        # grid_pass = 0
-        # grids = math.floor(number_of_grid)
 
-        # while not driver.is_done() and grid_pass < grids:
-        #     if color_sensor.grayscale() <= BRIGHTNESS_THRESHOLD:
-        #         grid_pass += 1
-
-    def get_disk_from_dispenser(type: DispenserType):
-        if type == DispenserType.Purple:
-            pass
-        elif type == DispenserType.Blue:
-            arm_motor.spin_for(REVERSE, ANGLE_FOR_BLUE_DISPENSER)
-        elif type == DispenserType.Yellow:
-            pass
 
     def start_moving(this):
-        for move in this.move_sequence:
-            if move[0] == MoveType.Forward or move[0] == MoveType.Reverse:
-                move(move[0], move[1])
-            elif move[0] == MoveType.Turn:
-                driver.turn_for(FORWARD, move[1])
-            elif move[0] == MoveType.Spin:
-                pass
-            elif move[0] == MoveType.Shoot:
-                shoot()
-            elif move[0] == MoveType.Arm:
-                arm_motor.spin_for(REVERSE, 60)
+        for move_type, value in this.move_sequence:
+            if move_type == MoveType.Forward or move_type == MoveType.Reverse:
+                Helpers.move(move_type, value)
+            elif move_type == MoveType.Turn:
+                driver.turn_for(FORWARD, value)
+            elif move_type == MoveType.Shoot:
+                Helpers.shoot(value)
+            elif move_type == MoveType.GetDisk:
+                Helpers.get_disk_from_dispenser(value)
 
 
 auto_drive = AutoDrive()
-auto_drive.start
+auto_drive.start_moving()
