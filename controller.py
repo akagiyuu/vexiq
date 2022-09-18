@@ -11,11 +11,67 @@ from vex import (
 )
 from drivetrain import Drivetrain
 
+# region Constant
+AngleToPrepareState = 180
+DefaultAngle = 20
+DefaultVelocity = 100
+# endregion
+
+class Controller_Extent(Controller):
+    def __init__(this, driver: Drivetrain, spin_motor: Motor, shoot_motor: Motor, arm_motor: Motor):
+        Controller.__init__(this)
+        this.Angle = 20
+        this.Velocity = 100
+
+        this.driver = driver
+        this.spin_motor = spin_motor
+        this.shoot_motor = shoot_motor
+        this.arm_motor = arm_motor
+
+    def drive(this):
+        drive_power = this.axisA.position()
+        turn_power = this.axisC.position()
+
+        this.driver.arcade(drive_power, turn_power)
+
+    def move_arm(this):
+        if this.buttonFUp.pressing():
+            this.arm_motor.spin_for(REVERSE, DefaultAngle)
+            return
+        if this.buttonFDown.pressing():
+            this.arm_motor.spin_for(FORWARD, DefaultAngle)
+            return
+
+    def spin(this):
+        if this.buttonLUp.pressing():
+            this.spin_motor.spin(REVERSE, DefaultVelocity)
+            return
+        if this.buttonLDown.pressing():
+            this.spin_motor.stop(vex.BrakeType.HOLD)
+            return
+
+    def shoot(this):
+        if this.buttonRUp.pressing():
+            this.shoot_motor.spin(FORWARD, DefaultVelocity)
+            return
+        if this.buttonRDown.pressing():
+            this.shoot_motor.stop(vex.BrakeType.COAST)
+            return
+
+    def shooting_prepare(this):
+        if this.buttonEUp.pressing():
+            this.shoot_motor.spin_for(FORWARD, AngleToPrepareState)
+
+    def detect_input(this):
+        this.drive()
+        this.move_arm()
+        this.spin()
+        this.shoot()
+        this.shooting_prepare()
+
+
 # region Initialize
 brain = Brain()
-
-controller = Controller()
-controller.set_deadband(10)
 
 left_motor = Motor(Ports.PORT12)
 right_motor = Motor(Ports.PORT7, True)
@@ -24,65 +80,10 @@ driver = Drivetrain(left_motor, right_motor)
 spin_motor = Motor(Ports.PORT10)
 arm_motor = Motor(Ports.PORT9)
 shoot_motor = Motor(Ports.PORT11)
+
+controller = Controller_Extent(driver, spin_motor, shoot_motor, arm_motor)
+controller.set_deadband(10)
 # endregion
-
-angle_to_prepare_state = 180
-
-# region Helpers
-
-
-def joystick_position_to_angle(position):
-    if position < - 100 or position > 100:
-        return 0
-    return position * 9 / 5
-
-
-def drive_using_controller():
-    drive_power = controller.axisA.position()
-    turn_power = controller.axisB.position()
-
-    driver.arcade(drive_power, turn_power)
-
-
-def move_arm_using_controller():
-    angle = joystick_position_to_angle(controller.axisD.position())
-    arm_motor.spin_for(FORWARD, angle, DEGREES, None, PERCENT, False)
-
-
-def spin(velocity=100):
-    if controller.buttonLUp.pressing():
-        spin_motor.spin(REVERSE, velocity, PERCENT)
-        return
-    if controller.buttonLDown.pressing():
-        spin_motor.stop(vex.BrakeType.HOLD)
-        return
-
-
-def shoot(velocity=100):
-    if controller.buttonRUp.pressing():
-        shoot_motor.spin(FORWARD, velocity, PERCENT)
-        # print(shoot_motor.rotation(vex.RotationUnits.DEG))
-        return
-    if controller.buttonRDown.pressing():
-        shoot_motor.stop(vex.BrakeType.COAST)
-        # shoot_motor.spin_to(FORWARD, 0)
-        return
-
-
-def shooting_prepare(velocity=100):
-    if controller.buttonEUp.pressing():
-        shoot_motor.spin_for(FORWARD, angle_to_prepare_state)
-
-# endregion
-
-
-def main():
-    drive_using_controller()
-    move_arm_using_controller()
-    spin()
-    shoot()
-    shooting_prepare()
-
 
 while True:
-    main()
+    controller.detect_input()
