@@ -1,16 +1,6 @@
-from sunau import AUDIO_FILE_ENCODING_LINEAR_16
-from tkinter import W
-from webbrowser import get
-import vex
-import sys
-import drivetrain
-import smartdrive
-import vision
 import math
 from timer import Timer
-
 from vex import (
-
     Brain, Motor, Ports, Colorsensor, TimeUnits,
     FORWARD, PERCENT, REVERSE, DEGREES, INCHES
 )
