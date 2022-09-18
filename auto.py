@@ -7,11 +7,12 @@ import drivetrain
 import smartdrive
 import vision
 import math
+from timer import Timer
 
 from vex import (
 
-    Brain, Motor, Ports, Colorsensor,
-    FORWARD, PERCENT, REVERSE, SECONDS, DEGREES, INCHES
+    Brain, Motor, Ports, Colorsensor, TimeUnits,
+    FORWARD, PERCENT, REVERSE, DEGREES, INCHES
 )
 from drivetrain import Drivetrain
 
@@ -20,7 +21,8 @@ ANGLE_TO_PREPARE_STATE = 180
 GRID_SIZE = 12  # 315
 STEP = 20
 BRIGHTNESS_THRESHOLD = 6
-ANGLE_FOR_BLUE_DISPENSER = 60
+ARM_STEP = 60
+PURPLE_DISPENSER_SPIN_TIME = 2000
 # endregion
 
 # region Enums
@@ -55,10 +57,17 @@ shoot_motor = Motor(Ports.PORT11)
 color_sensor = Colorsensor(Ports.PORT8)
 # endregion
 
+
 class Helpers:
     def move(direction, number_of_grid):
-        driver.drive_for(direction, GRID_SIZE * number_of_grid,
-                         INCHES, None, PERCENT, False)
+        driver.drive_for(
+            direction,
+            GRID_SIZE * number_of_grid,
+            INCHES,
+            None,
+            PERCENT,
+            False
+        )
         # grid_pass = 0
         # grids = math.floor(number_of_grid)
 
@@ -68,13 +77,23 @@ class Helpers:
 
     def get_disk_from_dispenser(this, type: DispenserType):
         if type == DispenserType.Purple:
-            pass
+            spin_motor.spin_for_time(
+                REVERSE,
+                PURPLE_DISPENSER_SPIN_TIME,
+                TimeUnits.MSEC,
+                None,
+                PERCENT
+            )
         elif type == DispenserType.Blue:
-            arm_motor.spin_for(REVERSE, ANGLE_FOR_BLUE_DISPENSER)
+            arm_motor.spin_for(REVERSE, ARM_STEP)
         elif type == DispenserType.Yellow:
             pass
+
     def shoot(time):
-        pass
+        Timer.start()
+        while Timer.elapsed_time() <= time:
+            shoot_motor.spin(FORWARD, 100)
+
 
 class AutoDrive:
     move_sequence = [
@@ -128,8 +147,6 @@ class AutoDrive:
         [MoveType.Reverse, 1.5],
         [MoveType.Shoot, 2000]
     ]
-
-
 
     def start_moving(this):
         for move_type, value in this.move_sequence:
