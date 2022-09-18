@@ -6,10 +6,10 @@ from vex import (
 from drivetrain import Drivetrain
 
 # region Constant
-AngleToPrepareState = 180
-DefaultAngle = 20
-DefaultVelocity = 80
-DeadBand = 10
+ANGLE_TO_PREPARE_STATE = 180
+DEFAULT_ANGLE = 20
+DEFAULT_VELOCITY = 80
+DEAD_BAND = 10
 # endregion
 
 # region Initialize
@@ -26,11 +26,6 @@ shoot_motor = Motor(Ports.PORT11)
 
 
 class Controller_Extent(Controller):
-    def __init__(this):
-        Controller.__init__(this)
-        this.Angle = 20
-        this.Velocity = 100
-
     def drive(this):
         drive_power = this.axisA.position()
         turn_power = this.axisC.position()
@@ -39,15 +34,15 @@ class Controller_Extent(Controller):
 
     def move_arm(this):
         if this.buttonFUp.pressing():
-            arm_motor.spin_for(REVERSE, DefaultAngle)
+            arm_motor.spin_for(REVERSE, DEFAULT_ANGLE)
             return
         if this.buttonFDown.pressing():
-            arm_motor.spin_for(FORWARD, DefaultAngle)
+            arm_motor.spin_for(FORWARD, DEFAULT_ANGLE)
             return
 
     def spin(this):
         if this.buttonLUp.pressing():
-            spin_motor.spin(REVERSE, DefaultVelocity)
+            spin_motor.spin(REVERSE, DEFAULT_VELOCITY)
             return
         if this.buttonLDown.pressing():
             spin_motor.stop(BrakeType.HOLD)
@@ -55,7 +50,7 @@ class Controller_Extent(Controller):
 
     def shoot(this):
         if this.buttonRUp.pressing():
-            shoot_motor.spin(FORWARD, DefaultVelocity)
+            shoot_motor.spin(FORWARD, DEFAULT_VELOCITY)
             return
         if this.buttonRDown.pressing():
             shoot_motor.stop(BrakeType.COAST)
@@ -63,7 +58,7 @@ class Controller_Extent(Controller):
 
     def shooting_prepare(this):
         if this.buttonEUp.pressing():
-            shoot_motor.spin_for(FORWARD, AngleToPrepareState)
+            shoot_motor.spin_for(FORWARD, ANGLE_TO_PREPARE_STATE)
 
     def detect_input(this):
         this.drive()
@@ -74,7 +69,7 @@ class Controller_Extent(Controller):
 
 
 controller = Controller_Extent()
-controller.set_deadband(DeadBand)
+controller.set_deadband(DEAD_BAND)
 
 
 while True:
