@@ -1,3 +1,4 @@
+from sunau import AUDIO_FILE_ENCODING_LINEAR_16
 import vex
 import sys
 import drivetrain
@@ -6,19 +7,22 @@ import vision
 
 from vex import (
 
-    Brain, Controller, Motor, Ports, Colorsensor,
+    Brain, Motor, Ports, Colorsensor,
     FORWARD, PERCENT, REVERSE, SECONDS, DEGREES
 )
 from drivetrain import Drivetrain
 
 # region Constant
-angle_to_prepare_state = 180
-grid_size = 315
-step = 20
-brightness_threshold = 6
+ANGLE_TO_PREPARE_STATE = 180
+GRID_SIZE = 315
+STEP = 20
+BRIGHTNESS_THRESHOLD = 6
+ANGLE_FOR_BLUE_DISPENSER = 60
 
 
-class Move():
+# endregion
+
+class MoveType():
     Forward = FORWARD
     Reverse = REVERSE
     Turn = 2
@@ -26,31 +30,50 @@ class Move():
     Shoot = 4
     Arm = 5
 
-# endregion
+class DispenserType():
+    Purple = 0
+    Blue = 1
+    Yellow = 2
 
 
 class AutoDrive:
     move_sequence = [
-        [[Move.Forward, 3], [Move.Turn, 90], [Move.Forward, 2], [Move.Spin, 200], [Move.Reverse, 1],
-         [Move.Turn, 90], [Move.Forward, 1], [Move.Arm], [Move.Reverse, 2], [Move.Shoot, 2000]],
+        [[MoveType.Forward, 3], [MoveType.Turn, 90], [MoveType.Forward, 2], [MoveType.Spin, 200], [MoveType.Reverse, 1],
+         [MoveType.Turn, 90], [MoveType.Forward, 1], [MoveType.Arm], [MoveType.Reverse, 2], [MoveType.Shoot, 2000]],
 
     ]
+
+    def move(direction, number_of_grid):
+        grid_pass = 0
+        while grid_pass < number_of_grid:
+            driver.drive_for(direction, STEP)
+            if color_sensor.grayscale() > BRIGHTNESS_THRESHOLD:
+                grid_pass += 1
 
     def start(this):
         this.get_dispensers(0)
 
+    def get_disk_from_dispenser(type: DispenserType):
+        if type == DispenserType.Purple:
+            pass
+        elif type == DispenserType.Blue:
+            arm_motor.spin_for(REVERSE, ANGLE_FOR_BLUE_DISPENSER)
+        elif type == DispenserType.Yellow:
+            pass
+
     def get_dispensers(this, index):
         for move in this.move_sequence[index]:
-            if move[0] == Move.Forward or move[0] == Move.Reverse:
+            if move[0] == MoveType.Forward or move[0] == MoveType.Reverse:
                 move(move[0], move[1])
-            elif move[0] == Move.Turn:
+            elif move[0] == MoveType.Turn:
                 driver.turn_for(FORWARD, move[1])
-            elif move[0] == Move.Spin:
+            elif move[0] == MoveType.Spin:
                 pass
-            elif move[0] == Move.Shoot:
+            elif move[0] == MoveType.Shoot:
                 shoot()
-            elif move[0] == Move.Arm:
+            elif move[0] == MoveType.Arm:
                 arm_motor.spin_for(REVERSE, 60)
+
 
 
 # region Initialize
@@ -69,13 +92,9 @@ color_sensor = Colorsensor(Ports.PORT8)
 
 
 # region Helpers
-def move(direction, number_of_grid):
-    grid_pass = 0
-    while grid_pass < number_of_grid:
-        driver.drive_for(direction, step)
-        if color_sensor.grayscale() > brightness_threshold:
-            grid_pass += 1
+
 # endregion
+
 
 auto_drive = AutoDrive()
 auto_drive.start()

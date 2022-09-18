@@ -14,7 +14,8 @@ from drivetrain import Drivetrain
 # region Constant
 AngleToPrepareState = 180
 DefaultAngle = 20
-DefaultVelocity = 100
+DefaultVelocity = 80
+DeadBand = 10
 # endregion
 
 class Controller_Extent(Controller):
@@ -82,7 +83,7 @@ arm_motor = Motor(Ports.PORT9)
 shoot_motor = Motor(Ports.PORT11)
 
 controller = Controller_Extent(driver, spin_motor, shoot_motor, arm_motor)
-controller.set_deadband(10)
+controller.set_deadband(DeadBand)
 # endregion
 
 while True:
