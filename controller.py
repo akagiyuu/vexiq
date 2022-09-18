@@ -1,12 +1,6 @@
-import vex
-import sys
-import drivetrain
-import smartdrive
-import vision
-
 from vex import (
 
-    Brain, Controller, Motor, Ports,
+    Brain, Controller, Motor, Ports, BrakeType,
     FORWARD, PERCENT, REVERSE, SECONDS, DEGREES
 )
 from drivetrain import Drivetrain
@@ -56,7 +50,7 @@ class Controller_Extent(Controller):
             spin_motor.spin(REVERSE, DefaultVelocity)
             return
         if this.buttonLDown.pressing():
-            spin_motor.stop(vex.BrakeType.HOLD)
+            spin_motor.stop(BrakeType.HOLD)
             return
 
     def shoot(this):
@@ -64,7 +58,7 @@ class Controller_Extent(Controller):
             shoot_motor.spin(FORWARD, DefaultVelocity)
             return
         if this.buttonRDown.pressing():
-            shoot_motor.stop(vex.BrakeType.COAST)
+            shoot_motor.stop(BrakeType.COAST)
             return
 
     def shooting_prepare(this):
