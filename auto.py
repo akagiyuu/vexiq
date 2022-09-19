@@ -38,7 +38,7 @@ brain = Brain()
 
 left_motor = Motor(Ports.PORT12)
 right_motor = Motor(Ports.PORT7, True)
-driver = Drivetrain(left_motor, right_motor, 8, 11, INCHES)
+driver = Drivetrain(left_motor, right_motor, 7.85 ,7.5 , INCHES)
 
 spin_motor = Motor(Ports.PORT10)
 arm_motor = Motor(Ports.PORT9)
@@ -71,14 +71,15 @@ class Helpers:
                 REVERSE,
                 PURPLE_DISPENSER_SPIN_TIME,
                 TimeUnits.MSEC,
-                None,
+                100,
                 PERCENT
             )
         elif type == DispenserType.Blue:
             arm_motor.spin_for(REVERSE, ARM_STEP)
         elif type == DispenserType.Yellow:
             pass
-
+    def turn(angle):
+        driver.turn_for(FORWARD, angle)
     def shoot(time):
         Timer.start()
         while Timer.elapsed_time() <= time:
@@ -143,7 +144,7 @@ class AutoDrive:
             if move_type == MoveType.Forward or move_type == MoveType.Reverse:
                 Helpers.move(move_type, value)
             elif move_type == MoveType.Turn:
-                driver.turn_for(FORWARD, value)
+                Helpers.turn(value)
             elif move_type == MoveType.Shoot:
                 Helpers.shoot(value)
             elif move_type == MoveType.GetDisk:
