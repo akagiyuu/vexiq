@@ -1,4 +1,5 @@
 import math
+from pydoc import Helper
 from sre_constants import IN
 from timer import Timer
 from vex import (
@@ -182,7 +183,10 @@ class Helpers:
             driver.start_drive_for(
                 FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
 
+    def get_actual_turn(angle):
+        return angle * 3 / 2
     def turn(angle):
+        angle = Helpers.get_actual_turn(angle)
         driver.turn_for(FORWARD, angle)
 
     def shoot(time):
