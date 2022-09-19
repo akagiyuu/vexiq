@@ -3,7 +3,7 @@ import vex
 from vex import (
 
     Brain, Motor, Ports, BrakeType,
-    FORWARD, PERCENT, REVERSE, SECONDS, DEGREES
+    FORWARD, PERCENT, REVERSE, SECONDS, DEGREES, MM
 )
 from drivetrain import Drivetrain
 
@@ -12,7 +12,7 @@ ANGLE_TO_PREPARE_STATE = 180
 DEFAULT_ANGLE = 100
 DEFAULT_VELOCITY = 80
 DEAD_BAND = 10
-YELLOW_DISPENSER_BACKWARD_MOVE = 5  # mm
+YELLOW_DISPENSER_BACKWARD_MOVE = 32  # mm
 # endregion
 
 # region Initialize
@@ -66,8 +66,8 @@ class Controller(vex.Controller):
 
     def get_disk_from_yellow_dispenser(self):
         if self.buttonEDown.pressing():
-            driver.start_drive_for(REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE)
-            driver.start_drive_for(FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE)
+            driver.start_drive_for(REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
+            driver.start_drive_for(FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
 
     def detect_input(self):
         self.drive()

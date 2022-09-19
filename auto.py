@@ -1,4 +1,5 @@
 import math
+from sre_constants import IN
 from timer import Timer
 from vex import (
     Brain, Motor, Ports, Colorsensor, TimeUnits,
@@ -12,7 +13,8 @@ GRID_SIZE = 12  # 315
 STEP = 20
 BRIGHTNESS_THRESHOLD = 6
 ARM_STEP = 60
-PURPLE_DISPENSER_SPIN_TIME = 2000
+GET_DISK_TIME = 2000
+YELLOW_DISPENSER_BACKWARD_MOVE = 1  # inch
 # endregion
 
 # region Enums
@@ -55,7 +57,6 @@ class Helpers:
             INCHES,
             100,
             PERCENT,
-            False
         )
         # grid_pass = 0
         # grids = math.floor(number_of_grid)
@@ -65,18 +66,20 @@ class Helpers:
         #         grid_pass += 1
 
     def get_disk_from_dispenser(this, type: DispenserType):
-        if type == DispenserType.Purple:
-            spin_motor.spin_for_time(
-                REVERSE,
-                PURPLE_DISPENSER_SPIN_TIME,
-                TimeUnits.MSEC,
-                100,
-                PERCENT
-            )
-        elif type == DispenserType.Blue:
+        spin_motor.spin_for_time(
+            REVERSE,
+            GET_DISK_TIME,
+            TimeUnits.MSEC,
+            100,
+            PERCENT
+        )
+        if type == DispenserType.Blue:
             arm_motor.spin_for(REVERSE, ARM_STEP)
         elif type == DispenserType.Yellow:
-            pass
+            arm_motor.spin_for(FORWARD, ARM_STEP)
+            driver.start_drive_for(REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
+            driver.start_drive_for(FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
+
 
     def turn(angle):
         driver.turn_for(FORWARD, angle)
