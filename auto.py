@@ -93,59 +93,69 @@ class AutoDrive:
         [MoveType.GetDisk, DispenserType.Yellow],
         [MoveType.Straight, -1],
     ]
-    move_sequence = [
-        # [MoveType.Straight, 1],
-        # [MoveType.Turn, 45],
-        # [MoveType.Straight, math.sqrt(2)],
-        # [MoveType.Turn, 45],
-        # [MoveType.Straight, 0.2],
-        # [MoveType.GetDisk, DispenserType.Purple]
-        # [MoveType.Straight, 0.2],
-        # [MoveType.Turn, 90],
-        # [MoveType.GetDisk, DispenserType.Blue]
-        # [MoveType.Turn, - 30]
-        # [MoveType.Straight, math.sqrt(5) / 2],
-        # [MoveType.Turn, 30]
-        # [MoveType.Straight, (1 + math.sqrt(2))]
-        # [MoveType.Shoot, 2000]
-
-
+    shoot_1 = [
         [MoveType.Turn, 135],
         [MoveType.Straight, -math.sqrt(2)],
         [MoveType.Turn, 45],
         [MoveType.Straight, -2]
         [MoveType.Shoot, 2000],
-
-        [MoveType.Straight, 1.5],
+    ]
+    get_purple_dispenser_1 = [
+        [MoveType.Straight, -1.5],
         [MoveType.Turn, 90],
         [MoveType.Straight, 1],
         [MoveType.GetDisk, DispenserType.Purple],
+    ]
+    get_blue_dispenser_1 = [
         [MoveType.Turn, -135],
         [MoveType.Straight, math.sqrt(2) / 2],
         [MoveType.Turn, 45],
         [MoveType.GetDisk, DispenserType.Blue],
+    ]
+    shoot_2 = [
         [MoveType.Turn, 90 - math.degrees(math.atan(3))]
         [MoveType.Straight, -math.sqrt(10)/2],
         [MoveType.Turn, -(90 - math.degrees(math.atan(3)))]
         [MoveType.Shoot, 2000]
-
+    ]
+    get_blue_dispenser_2 = [
         [MoveType.Straight, 0.3],
         [MoveType.Turn, -90],
         [MoveType.Straight, 2.5],
         [MoveType.Straight, 2 - 0.2],
         [MoveType.GetDisk, DispenserType.Blue],
+    ]
+    get_purple_dispenser_2 = [
         [MoveType.Straight, -0.1],
         [MoveType.Turn, - 90],
         [MoveType.Straight, 0.5],
         [MoveType.GetDisk, DispenserType.Purple],
+    ]
+    shoot_3 = [
         [MoveType.Straight, -1],
         [MoveType.Turn, 90],
         [MoveType.Straight, -1.5],
         [MoveType.Shoot, 2000]
     ]
+    # move_sequence = [
+    #     # [MoveType.Straight, 1],
+    #     # [MoveType.Turn, 45],
+    #     # [MoveType.Straight, math.sqrt(2)],
+    #     # [MoveType.Turn, 45],
+    #     # [MoveType.Straight, 0.2],
+    #     # [MoveType.GetDisk, DispenserType.Purple]
+    #     # [MoveType.Straight, 0.2],
+    #     # [MoveType.Turn, 90],
+    #     # [MoveType.GetDisk, DispenserType.Blue]
+    #     # [MoveType.Turn, - 30]
+    #     # [MoveType.Straight, math.sqrt(5) / 2],
+    #     # [MoveType.Turn, 30]
+    #     # [MoveType.Straight, (1 + math.sqrt(2))]
+    #     # [MoveType.Shoot, 2000]
 
-    def start_moving(this):
-        for move_type, value in this.move_sequence:
+    # ]
+    def execute(this, move_sequence):
+        for move_type, value in move_sequence:
             if MoveType.Straight:
                 Helpers.move(value)
             elif move_type == MoveType.Turn:
@@ -154,6 +164,15 @@ class AutoDrive:
                 Helpers.shoot(value)
             elif move_type == MoveType.GetDisk:
                 Helpers.get_disk_from_dispenser(value)
+    def start_moving(this):
+        this.execute(this.get_yellow_dispenser)
+        this.execute(this.shoot_1)
+        this.execute(this.get_purple_dispenser_1)
+        this.execute(this.get_blue_dispenser_1)
+        this.execute(this.shoot_2)
+        this.execute(this.get_blue_dispenser_2)
+        this.execute(this.get_purple_dispenser_2)
+        this.execute(this.shoot_3)
 
 
 auto_drive = AutoDrive()
