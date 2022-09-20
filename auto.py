@@ -48,6 +48,7 @@ color_sensor = Colorsensor(Ports.PORT8)
 
 
 class Helpers:
+    @staticmethod
     def move(number_of_grid):
         driver.drive_for(
             FORWARD,
@@ -62,40 +63,51 @@ class Helpers:
         # while not driver.is_done() and grid_pass < grids:
         #     if color_sensor.grayscale() <= BRIGHTNESS_THRESHOLD:
         #         grid_pass += 1
-
+    @staticmethod
     def get_disk_from_dispenser(type):
-        if type == DispenserType.Blue:
-            arm_motor.start_spin_for(REVERSE, ARM_STEP)
+        if type == DispenserType.Yellow:
+            spin_motor.spin_for_time(
+                REVERSE,
+                GET_DISK_TIME,
+                TimeUnits.MSEC,
+                5000,
+                PERCENT,
+            )
+        elif type == DispenserType.Blue:
+            arm_motor.spin_for(REVERSE, ARM_STEP)
+            spin_motor.spin_for_time(
+                REVERSE,
+                GET_DISK_TIME,
+                TimeUnits.MSEC,
+                5000,
+                PERCENT,
+            )
         elif type == DispenserType.Yellow:
             arm_motor.spin_for(REVERSE, ARM_STEP)
             driver.drive_for(
                 REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
             driver.drive_for(
                 FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
-        spin_motor.spin_for_time(
-            REVERSE,
-            GET_DISK_TIME,
-            TimeUnits.MSEC,
-            100,
-            PERCENT
-        )
+            spin_motor.spin_for_time(
+                REVERSE,
+                GET_DISK_TIME,
+                TimeUnits.MSEC,
+                5000,
+                PERCENT,
+            )
 
-
-
+    @staticmethod
     def get_actual_turn(angle):
         return angle * 3 / 2
+
+    @staticmethod
     def turn(angle):
         angle = Helpers.get_actual_turn(angle)
         driver.turn_for(FORWARD, angle)
 
+    @staticmethod
     def shoot(time):
-        shoot_motor.spin_for_time(
-            FORWARD,
-            time,
-            TimeUnits.MSEC,
-            100,
-            PERCENT
-        )
+        shoot_motor.spin_for_time(FORWARD, time, TimeUnits.MSEC, 100, PERCENT)
 
 
 class AutoDrive:
@@ -103,13 +115,6 @@ class AutoDrive:
         [MoveType.Straight, 2.06],  # Move until reach yellow dispenser
         [MoveType.GetDisk, DispenserType.Yellow],
         [MoveType.Straight, -1],
-    ]
-    shoot_1 = [
-        [MoveType.Turn, 135],
-        [MoveType.Straight, -math.sqrt(2)],
-        [MoveType.Turn, 45],
-        [MoveType.Straight, -2],
-        [MoveType.Shoot, 2000]
     ]
     get_purple_dispenser_1 = [
         [MoveType.Straight, -1.5],
@@ -123,9 +128,14 @@ class AutoDrive:
         [MoveType.Turn, 45],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
-    shoot_2 = [
+    shoot_1 = [
+        [MoveType.Turn, 135],
+        [MoveType.Straight, -math.sqrt(2)],
+        [MoveType.Turn, 45],
+        [MoveType.Straight, -2],
         [MoveType.Shoot, 2000]
     ]
+
     get_blue_dispenser_2 = [
         [MoveType.Straight, 0.3],
         [MoveType.Turn, -90],
@@ -139,14 +149,14 @@ class AutoDrive:
         [MoveType.Straight, 0.5],
         [MoveType.GetDisk, DispenserType.Purple],
     ]
-    shoot_3 = [
+    shoot_2 = [
         [MoveType.Straight, -1],
         [MoveType.Turn, 90],
         [MoveType.Straight, -1.5],
         [MoveType.Shoot, 2000]
     ]
 
-    def execute(this, move_sequence):
+    def execute(self, move_sequence):
         for move_type, value in move_sequence:
             if move_type == MoveType.Straight:
                 Helpers.move(value)
@@ -157,15 +167,14 @@ class AutoDrive:
             elif move_type == MoveType.GetDisk:
                 Helpers.get_disk_from_dispenser(value)
 
-    def start_moving(this):
-        this.execute(this.get_yellow_dispenser)
-        this.execute(this.shoot_1)
-        this.execute(this.get_purple_dispenser_1)
-        this.execute(this.get_blue_dispenser_1)
-        this.execute(this.shoot_2)
-        this.execute(this.get_blue_dispenser_2)
-        this.execute(this.get_purple_dispenser_2)
-        this.execute(this.shoot_3)
+    def start_moving(self):
+        self.execute(self.get_yellow_dispenser)
+        self.execute(self.get_purple_dispenser_1)
+        self.execute(self.get_blue_dispenser_1)
+        self.execute(self.shoot_1)
+        self.execute(self.get_blue_dispenser_2)
+        self.execute(self.get_purple_dispenser_2)
+        self.execute(self.shoot_2)
 
 
 auto_drive = AutoDrive()
