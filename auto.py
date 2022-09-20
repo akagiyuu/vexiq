@@ -1,5 +1,4 @@
 import math
-from timer import Timer
 from vex import (
     Brain, Motor, Ports, Colorsensor, TimeUnits,
     FORWARD, PERCENT, REVERSE, DEGREES, INCHES
@@ -11,7 +10,7 @@ ANGLE_TO_PREPARE_STATE = 180
 GRID_SIZE = 12  # 315
 STEP = 20
 BRIGHTNESS_THRESHOLD = 6
-ARM_STEP = 60
+ARM_STEP = 750
 GET_DISK_TIME = 2000
 YELLOW_DISPENSER_BACKWARD_MOVE = 1  # inch
 # endregion
@@ -46,106 +45,6 @@ shoot_motor = Motor(Ports.PORT11)
 
 color_sensor = Colorsensor(Ports.PORT8)
 # endregion
-# move_sequence = [
-#     # [MoveType.Forward, 1],
-#     # [MoveType.Turn, 45],
-#     # [MoveType.Forward, math.sqrt(2)],
-#     # [MoveType.Turn, 45],
-#     # [MoveType.Forward, 0.2],
-#     # [MoveType.GetDisk, DispenserType.Purple]
-#     # [MoveType.Reverse, 0.2],
-#     # [MoveType.Turn, 90],
-#     # [MoveType.GetDisk, DispenserType.Blue]
-#     # [MoveType.Turn, - 30]
-#     # [MoveType.Reverse, math.sqrt(5) / 2],
-#     # [MoveType.Turn, 30]
-#     # [MoveType.Reverse, (1 + math.sqrt(2))]
-#     # [MoveType.Shoot, 2000]
-#     [MoveType.Forward, 2.06],  # Move until reach yellow dispenser
-#     [MoveType.GetDisk, DispenserType.Yellow],
-#     [MoveType.Reverse, 1],
-#     [MoveType.Turn, 135],
-#     [MoveType.Reverse, math.sqrt(2)],
-#     [MoveType.Turn, 45],
-#     [MoveType.Reverse, 2]
-#     [MoveType.Shoot, 2000],
-
-#     [MoveType.Forward, 1.5],
-#     [MoveType.Turn, 90],
-#     [MoveType.Forward, 1],
-#     [MoveType.GetDisk, DispenserType.Purple],
-#     [MoveType.Turn, -135],
-#     [MoveType.Forward, math.sqrt(2) / 2],
-#     [MoveType.Turn, 45],
-#     [MoveType.GetDisk, DispenserType.Blue],
-#     [MoveType.Turn, 90 - math.degrees(math.atan(3))]
-#     [MoveType.Reverse, math.sqrt(10)/2],
-#     [MoveType.Turn, -(90 - math.degrees(math.atan(3)))]
-#     [MoveType.Shoot, 2000]
-
-#     [MoveType.Forward, 0.3],
-#     [MoveType.Turn, -90],
-#     [MoveType.Forward, 2.5],
-#     [MoveType.Forward, 2 - 0.2],
-#     [MoveType.GetDisk, DispenserType.Blue],
-#     [MoveType.Reverse, 0.1],
-#     [MoveType.Turn, - 90],
-#     [MoveType.Forward, 0.5],
-#     [MoveType.GetDisk, DispenserType.Purple],
-#     [MoveType.Reverse, 1],
-#     [MoveType.Turn, 90],
-#     [MoveType.Reverse, 1.5],
-#     [MoveType.Shoot, 2000]
-# ]
-# move_sequence = [
-#     # [MoveType.Forward, 1],
-#     # [MoveType.Turn, 45],
-#     # [MoveType.Forward, math.sqrt(2)],
-#     # [MoveType.Turn, 45],
-#     # [MoveType.Forward, 0.2],
-#     # [MoveType.GetDisk, DispenserType.Purple]
-#     # [MoveType.Reverse, 0.2],
-#     # [MoveType.Turn, 90],
-#     # [MoveType.GetDisk, DispenserType.Blue]
-#     # [MoveType.Turn, - 30]
-#     # [MoveType.Reverse, math.sqrt(5) / 2],
-#     # [MoveType.Turn, 30]
-#     # [MoveType.Reverse, (1 + math.sqrt(2))]
-#     # [MoveType.Shoot, 2000]
-#     (MoveType.Forward, 2.06),  # Move until reach yellow dispenser
-#     (MoveType.GetDisk, DispenserType.Yellow),
-#     (MoveType.Reverse, 1),
-#     (MoveType.Turn, 135),
-#     (MoveType.Reverse, math.sqrt(2)),
-#     (MoveType.Turn, 45),
-#     (MoveType.Reverse, 2)
-#     (MoveType.Shoot, 2000),
-#     (MoveType.Forward, 1.5),
-#     (MoveType.Turn, 90),
-#     (MoveType.Forward, 1),
-#     (MoveType.GetDisk, DispenserType.Purple),
-#     (MoveType.Turn, -135),
-#     (MoveType.Forward, math.sqrt(2) / 2),
-#     (MoveType.Turn, 45),
-#     (MoveType.GetDisk, DispenserType.Blue),
-#     (MoveType.Turn, 90 - math.degrees(math.atan(3))),
-#     (MoveType.Reverse, math.sqrt(10)/2),
-#     (MoveType.Turn, -(90 - math.degrees(math.atan(3)))),
-#     (MoveType.Shoot, 2000),
-#     (MoveType.Forward, 0.3),
-#     (MoveType.Turn, -90),
-#     (MoveType.Forward, 2.5),
-#     (MoveType.Forward, 2 - 0.2),
-#     (MoveType.GetDisk, DispenserType.Blue),
-#     (MoveType.Reverse, 0.1),
-#     (MoveType.Turn, - 90),
-#     (MoveType.Forward, 0.5),
-#     (MoveType.GetDisk, DispenserType.Purple),
-#     (MoveType.Reverse, 1),
-#     (MoveType.Turn, 90),
-#     (MoveType.Reverse, 1.5),
-#     (MoveType.Shoot, 2000)
-# ]
 
 
 class Helpers:
@@ -165,6 +64,14 @@ class Helpers:
         #         grid_pass += 1
 
     def get_disk_from_dispenser(type):
+        if type == DispenserType.Blue:
+            arm_motor.start_spin_for(REVERSE, ARM_STEP)
+        elif type == DispenserType.Yellow:
+            arm_motor.spin_for(REVERSE, ARM_STEP)
+            driver.drive_for(
+                REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
+            driver.drive_for(
+                FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
         spin_motor.spin_for_time(
             REVERSE,
             GET_DISK_TIME,
@@ -172,14 +79,8 @@ class Helpers:
             100,
             PERCENT
         )
-        if type == DispenserType.Blue:
-            arm_motor.spin_for(REVERSE, ARM_STEP)
-        elif type == DispenserType.Yellow:
-            arm_motor.spin_for(FORWARD, ARM_STEP)
-            driver.start_drive_for(
-                REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
-            driver.start_drive_for(
-                FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
+
+
 
     def get_actual_turn(angle):
         return angle * 3 / 2
@@ -188,9 +89,13 @@ class Helpers:
         driver.turn_for(FORWARD, angle)
 
     def shoot(time):
-        Timer.start()
-        while Timer.elapsed_time() <= time:
-            shoot_motor.spin(FORWARD, 100)
+        shoot_motor.spin_for_time(
+            FORWARD,
+            time,
+            TimeUnits.MSEC,
+            100,
+            PERCENT
+        )
 
 
 class AutoDrive:
@@ -203,8 +108,8 @@ class AutoDrive:
         [MoveType.Turn, 135],
         [MoveType.Straight, -math.sqrt(2)],
         [MoveType.Turn, 45],
-        [MoveType.Straight, -2]
-        [MoveType.Shoot, 2000],
+        [MoveType.Straight, -2],
+        [MoveType.Shoot, 2000]
     ]
     get_purple_dispenser_1 = [
         [MoveType.Straight, -1.5],
@@ -219,9 +124,6 @@ class AutoDrive:
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     shoot_2 = [
-        [MoveType.Turn, 90 - math.degrees(math.atan(3))]
-        [MoveType.Straight, -math.sqrt(10)/2],
-        [MoveType.Turn, -(90 - math.degrees(math.atan(3)))]
         [MoveType.Shoot, 2000]
     ]
     get_blue_dispenser_2 = [
@@ -246,7 +148,7 @@ class AutoDrive:
 
     def execute(this, move_sequence):
         for move_type, value in move_sequence:
-            if MoveType.Straight:
+            if move_type == MoveType.Straight:
                 Helpers.move(value)
             elif move_type == MoveType.Turn:
                 Helpers.turn(value)
