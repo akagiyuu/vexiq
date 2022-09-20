@@ -166,7 +166,7 @@ class Helpers:
         #     if color_sensor.grayscale() <= BRIGHTNESS_THRESHOLD:
         #         grid_pass += 1
 
-    def get_disk_from_dispenser(this, type: DispenserType):
+    def get_disk_from_dispenser(this, type):
         spin_motor.spin_for_time(
             REVERSE,
             GET_DISK_TIME,
