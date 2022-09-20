@@ -1,6 +1,4 @@
 import math
-from pydoc import Helper
-from sre_constants import IN
 from timer import Timer
 from vex import (
     Brain, Motor, Ports, Colorsensor, TimeUnits,
@@ -166,7 +164,7 @@ class Helpers:
         #     if color_sensor.grayscale() <= BRIGHTNESS_THRESHOLD:
         #         grid_pass += 1
 
-    def get_disk_from_dispenser(this, type):
+    def get_disk_from_dispenser(type):
         spin_motor.spin_for_time(
             REVERSE,
             GET_DISK_TIME,
