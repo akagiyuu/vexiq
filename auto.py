@@ -5,13 +5,15 @@ from vex import (
 )
 from drivetrain import Drivetrain
 
+from asyncio.timeouts import Timeout
+
 # region Constant
 ANGLE_TO_PREPARE_STATE = 180
 GRID_SIZE = 12  # 315
 STEP = 20
 BRIGHTNESS_THRESHOLD = 6
 ARM_STEP = 750
-GET_DISK_TIME = 2000
+TIMEOUT = 2000
 YELLOW_DISPENSER_BACKWARD_MOVE = 1  # inch
 # endregion
 
@@ -48,7 +50,6 @@ color_sensor = Colorsensor(Ports.PORT8)
 
 
 class Helpers:
-    @staticmethod
     def move(number_of_grid):
         driver.drive_for(
             FORWARD,
@@ -63,61 +64,46 @@ class Helpers:
         # while not driver.is_done() and grid_pass < grids:
         #     if color_sensor.grayscale() <= BRIGHTNESS_THRESHOLD:
         #         grid_pass += 1
-    @staticmethod
+    def move_forward_and_back(distance):
+        driver.drive_for(REVERSE, distance, INCHES, 100)
+        driver.drive_for(FORWARD, distance, INCHES, 100)
+
+    def spin_motor_run(time=Timeout):
+        spin_motor.spin_for_time(REVERSE, time, TimeUnits.MSEC, 100, PERCENT)
+
     def get_disk_from_dispenser(type):
         if type == DispenserType.Purple:
-            spin_motor.spin_for_time(
-                REVERSE,
-                GET_DISK_TIME,
-                TimeUnits.MSEC,
-                5000,
-                PERCENT,
-            )
+            Helpers.spin_motor_run()
         elif type == DispenserType.Blue:
-            arm_motor.spin_for(REVERSE, ARM_STEP)
-            spin_motor.spin_for_time(
-                REVERSE,
-                GET_DISK_TIME,
-                TimeUnits.MSEC,
-                5000,
-                PERCENT,
-            )
+            arm_motor.spin_for(FORWARD, ARM_STEP)
+            Helpers.spin_motor_run()
         elif type == DispenserType.Yellow:
             arm_motor.spin_for(REVERSE, ARM_STEP)
-            driver.drive_for(
-                REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
-            driver.drive_for(
-                FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, INCHES, 100)
-            spin_motor.spin_for_time(
-                REVERSE,
-                GET_DISK_TIME,
-                TimeUnits.MSEC,
-                5000,
-                PERCENT,
-            )
+            Helpers.move_forward_and_back(YELLOW_DISPENSER_BACKWARD_MOVE)
+            arm_motor.start_spin_for(FORWARD, ARM_STEP)
+            Helpers.spin_motor_run()
+            Helpers.move(-1)
+            arm_motor.spin_for(REVERSE, ARM_STEP)
 
-    @staticmethod
     def get_actual_turn(angle):
         return angle * 3 / 2
 
-    @staticmethod
     def turn(angle):
         angle = Helpers.get_actual_turn(angle)
         driver.turn_for(FORWARD, angle)
 
-    @staticmethod
     def shoot(time):
         shoot_motor.spin_for_time(FORWARD, time, TimeUnits.MSEC, 100, PERCENT)
+
 
 class AutoDrive:
     get_yellow_dispenser = [
         [MoveType.Straight, 2.06],  # Move until reach yellow dispenser
         [MoveType.GetDisk, DispenserType.Yellow],
-        [MoveType.Straight, -1],
     ]
     get_blue_dispenser_1 = [
         [MoveType.Turn, 45],
-        [MoveType.Straight, 3 * sqrt(2) / 2],
+        [MoveType.Straight, 3 * math.sqrt(2) / 2],
         [MoveType.Turn, 135],
         [MoveType.GetDisk, DispenserType.Blue],
     ]

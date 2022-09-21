@@ -1,7 +1,7 @@
 
 import vex
+from timer import Timer
 from vex import (
-
     Brain, Motor, Ports, BrakeType,
     FORWARD, PERCENT, REVERSE, SECONDS, DEGREES, MM
 )
@@ -13,6 +13,7 @@ DEFAULT_ANGLE = 100
 DEFAULT_VELOCITY = 80
 DEAD_BAND = 10
 YELLOW_DISPENSER_BACKWARD_MOVE = 32  # mm
+TIMEOUT = 200 #ms
 # endregion
 
 # region Initialize
@@ -30,6 +31,7 @@ shoot_motor = Motor(Ports.PORT11)
 
 
 class Controller(vex.Controller):
+    number_of_LDown_press = 0
     def drive(self):
         drive_power = self.axisA.position()
         turn_power = self.axisC.position()
@@ -68,6 +70,18 @@ class Controller(vex.Controller):
         if self.buttonEDown.pressing():
             driver.start_drive_for(REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
             driver.start_drive_for(FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
+    
+    def expand_stretcher(self):
+        if not self.buttonLDown.pressing():
+            return
+        self.number_of_LDown_press += 1
+        if self.number_of_LDown_press == 1:
+            Timer.start()
+            return
+        self.number_of_LDown_press = 0
+        print(Timer.elapsed_time())
+
+
 
     def detect_input(self):
         self.drive()
