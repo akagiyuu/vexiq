@@ -65,7 +65,7 @@ class Helpers:
         #         grid_pass += 1
     @staticmethod
     def get_disk_from_dispenser(type):
-        if type == DispenserType.Yellow:
+        if type == DispenserType.Purple:
             spin_motor.spin_for_time(
                 REVERSE,
                 GET_DISK_TIME,
@@ -116,43 +116,41 @@ class AutoDrive:
         [MoveType.GetDisk, DispenserType.Yellow],
         [MoveType.Straight, -1],
     ]
-    get_purple_dispenser_1 = [
-        [MoveType.Straight, -1.5],
-        [MoveType.Turn, 90],
-        [MoveType.Straight, 1],
-        [MoveType.GetDisk, DispenserType.Purple],
-    ]
     get_blue_dispenser_1 = [
-        [MoveType.Turn, -135],
-        [MoveType.Straight, math.sqrt(2) / 2],
         [MoveType.Turn, 45],
+        [MoveType.Straight, 3 * sqrt(2) / 2],
+        [MoveType.Turn, 135],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
+    get_purple_dispenser_1 = [
+        [MoveType.Turn, 90],
+        [MoveType.Straight, math.sqrt(2) / 2],
+        [MoveType.GetDisk, DispenserType.Purple],
+    ]
     shoot_1 = [
-        [MoveType.Turn, 135],
-        [MoveType.Straight, -math.sqrt(2)],
-        [MoveType.Turn, 45],
-        [MoveType.Straight, -2],
+        [MoveType.Turn, math.arctan(3/4)],
+        [MoveType.Straight, -2.5],
+        [MoveType.Turn, math.arctan(4/3)],
         [MoveType.Shoot, 2000]
     ]
 
     get_blue_dispenser_2 = [
-        [MoveType.Straight, 0.3],
+        [MoveType.Turn, 90],
+        [MoveType.Straight, 1.5],
         [MoveType.Turn, -90],
-        [MoveType.Straight, 2.5],
-        [MoveType.Straight, 2 - 0.2],
+        [MoveType.Straight, 2],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     get_purple_dispenser_2 = [
-        [MoveType.Straight, -0.1],
-        [MoveType.Turn, - 90],
-        [MoveType.Straight, 0.5],
+        [MoveType.Straight, -0.5],
+        [MoveType.Turn, 90],
+        [MoveType.Straight, math.sqrt(2) / 2],
         [MoveType.GetDisk, DispenserType.Purple],
     ]
     shoot_2 = [
-        [MoveType.Straight, -1],
-        [MoveType.Turn, 90],
-        [MoveType.Straight, -1.5],
+        [MoveType.Turn, -math.arctan(3/4)],
+        [MoveType.Straight, -2.5],
+        [MoveType.Turn, -math.arctan(4/3)],
         [MoveType.Shoot, 2000]
     ]
 
