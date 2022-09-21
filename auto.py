@@ -127,9 +127,9 @@ class AutoDrive:
         [MoveType.GetDisk, DispenserType.Purple],
     ]
     shoot_1 = [
-        [MoveType.Turn, math.arctan(3/4)],
+        [MoveType.Turn, math.atan(3/4)],
         [MoveType.Straight, -2.5],
-        [MoveType.Turn, math.arctan(4/3)],
+        [MoveType.Turn, math.atan(4/3)],
         [MoveType.Shoot, 2000]
     ]
 
@@ -147,9 +147,9 @@ class AutoDrive:
         [MoveType.GetDisk, DispenserType.Purple],
     ]
     shoot_2 = [
-        [MoveType.Turn, -math.arctan(3/4)],
+        [MoveType.Turn, -math.atan(3/4)],
         [MoveType.Straight, -2.5],
-        [MoveType.Turn, -math.arctan(4/3)],
+        [MoveType.Turn, -math.atan(4/3)],
         [MoveType.Shoot, 2000]
     ]
 
