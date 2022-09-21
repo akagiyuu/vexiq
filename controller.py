@@ -7,9 +7,12 @@ from vex import (
 )
 from drivetrain import Drivetrain
 
+from auto import ARM_STEP
+
 # region Constant
 ANGLE_TO_PREPARE_STATE = 180
 DEFAULT_ANGLE = 100
+ARM_STEP = 750
 DEFAULT_VELOCITY = 80
 DEAD_BAND = 10
 YELLOW_DISPENSER_BACKWARD_MOVE = 32  # mm
@@ -20,7 +23,7 @@ TIMEOUT = 200 #ms
 brain = Brain()
 
 left_motor = Motor(Ports.PORT12)
-right_motor = Motor(Ports.PORT7, True)
+right_motor = Motor(Ports.PORT4, True)
 driver = Drivetrain(left_motor, right_motor)
 driver.set_drive_velocity(100)
 
@@ -41,10 +44,10 @@ class Controller(vex.Controller):
 
     def move_arm(self):
         if self.buttonFUp.pressing():
-            arm_motor.start_spin_for(REVERSE, DEFAULT_ANGLE)
+            arm_motor.start_spin_for(ARM_STEP)
             return
         if self.buttonFDown.pressing():
-            arm_motor.start_spin_for(FORWARD, DEFAULT_ANGLE)
+            arm_motor.start_spin_for(ARM_STEP)
             return
 
     def spin(self):
@@ -64,6 +67,7 @@ class Controller(vex.Controller):
         if self.buttonRDown.pressing():
             shoot_motor.stop(BrakeType.COAST)
             return
+
 
     def shooting_prepare(self):
         if self.buttonEUp.pressing():
@@ -92,6 +96,7 @@ class Controller(vex.Controller):
 
 controller = Controller()
 controller.set_deadband(DEAD_BAND)
+
 
 
 while True:

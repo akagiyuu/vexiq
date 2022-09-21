@@ -36,7 +36,7 @@ class DispenserType:
 brain = Brain()
 
 left_motor = Motor(Ports.PORT12)
-right_motor = Motor(Ports.PORT7, True)
+right_motor = Motor(Ports.PORT4, True)
 driver = Drivetrain(left_motor, right_motor, 7.85, 7.5, INCHES)
 
 spin_motor = Motor(Ports.PORT10)
@@ -96,8 +96,7 @@ class Helpers:
 
 class AutoDrive:
     get_yellow_dispenser = [
-        [MoveType.Straight, 2.06],  # Move until reach yellow dispenser
-        [MoveType.GetDisk, DispenserType.Yellow],
+        [MoveType.Turn, 90]
     ]
     get_blue_dispenser_1 = [
         [MoveType.Turn, 45],
