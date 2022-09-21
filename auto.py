@@ -166,8 +166,8 @@ class AutoDrive:
 
     def start_moving(self):
         self.execute(self.get_yellow_dispenser)
-        self.execute(self.get_purple_dispenser_1)
         self.execute(self.get_blue_dispenser_1)
+        self.execute(self.get_purple_dispenser_1)
         self.execute(self.shoot_1)
         self.execute(self.get_blue_dispenser_2)
         self.execute(self.get_purple_dispenser_2)
