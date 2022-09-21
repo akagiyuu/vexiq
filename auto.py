@@ -5,8 +5,6 @@ from vex import (
 )
 from drivetrain import Drivetrain
 
-from asyncio.timeouts import Timeout
-
 # region Constant
 ANGLE_TO_PREPARE_STATE = 180
 GRID_SIZE = 12  # 315
@@ -68,7 +66,7 @@ class Helpers:
         driver.drive_for(REVERSE, distance, INCHES, 100)
         driver.drive_for(FORWARD, distance, INCHES, 100)
 
-    def spin_motor_run(time=Timeout):
+    def spin_motor_run(time=TIMEOUT):
         spin_motor.spin_for_time(REVERSE, time, TimeUnits.MSEC, 100, PERCENT)
 
     def get_disk_from_dispenser(type):
@@ -108,7 +106,7 @@ class AutoDrive:
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     get_purple_dispenser_1 = [
-        [MoveType.Turn, 90],
+        [MoveType.Turn, -90],
         [MoveType.Straight, math.sqrt(2) / 2],
         [MoveType.GetDisk, DispenserType.Purple],
     ]

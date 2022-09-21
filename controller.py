@@ -27,11 +27,12 @@ driver.set_drive_velocity(100)
 spin_motor = Motor(Ports.PORT10)
 arm_motor = Motor(Ports.PORT9)
 shoot_motor = Motor(Ports.PORT11)
+stretcher = Motor(Ports.PORT6)
 # endregion
 
 
 class Controller(vex.Controller):
-    number_of_LDown_press = 0
+    is_spinning = False
     def drive(self):
         drive_power = self.axisA.position()
         turn_power = self.axisC.position()
@@ -47,12 +48,14 @@ class Controller(vex.Controller):
             return
 
     def spin(self):
-        if self.buttonLUp.pressing():
-            spin_motor.spin(REVERSE, DEFAULT_VELOCITY)
+        if not self.buttonLUp.pressing():
             return
-        if self.buttonLDown.pressing():
+        if self.is_spinning == True:
             spin_motor.stop(BrakeType.HOLD)
+            self.is_spinning = False
             return
+        spin_motor.spin(REVERSE, DEFAULT_VELOCITY)
+        self.is_spinning = True
 
     def shoot(self):
         if self.buttonRUp.pressing():
@@ -68,18 +71,12 @@ class Controller(vex.Controller):
 
     def get_disk_from_yellow_dispenser(self):
         if self.buttonEDown.pressing():
-            driver.start_drive_for(REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
-            driver.start_drive_for(FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
+            driver.drive_for(REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
+            driver.drive_for(FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
     
     def expand_stretcher(self):
-        if not self.buttonLDown.pressing():
-            return
-        self.number_of_LDown_press += 1
-        if self.number_of_LDown_press == 1:
-            Timer.start()
-            return
-        self.number_of_LDown_press = 0
-        print(Timer.elapsed_time())
+        if self.buttonLDown.pressing():
+            stretcher.spin_for(FORWARD, 80, DEGREES, 100)
 
 
 
@@ -90,6 +87,7 @@ class Controller(vex.Controller):
         self.shoot()
         self.shooting_prepare()
         self.get_disk_from_yellow_dispenser()
+        self.expand_stretcher()
 
 
 controller = Controller()
