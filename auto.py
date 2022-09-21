@@ -109,7 +109,6 @@ class Helpers:
     def shoot(time):
         shoot_motor.spin_for_time(FORWARD, time, TimeUnits.MSEC, 100, PERCENT)
 
-
 class AutoDrive:
     get_yellow_dispenser = [
         [MoveType.Straight, 2.06],  # Move until reach yellow dispenser
