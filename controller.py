@@ -1,22 +1,18 @@
-
 import vex
-from timer import Timer
 from vex import (
     Brain, Motor, Ports, BrakeType,
-    FORWARD, PERCENT, REVERSE, SECONDS, DEGREES, MM
+    FORWARD, PERCENT, REVERSE, DEGREES, MM
 )
 from drivetrain import Drivetrain
-
-from auto import ARM_STEP
 
 # region Constant
 ANGLE_TO_PREPARE_STATE = 180
 DEFAULT_ANGLE = 100
-ARM_STEP = 750
+ARM_STEP = 500
 DEFAULT_VELOCITY = 80
 DEAD_BAND = 10
 YELLOW_DISPENSER_BACKWARD_MOVE = 32  # mm
-TIMEOUT = 200 #ms
+TIMEOUT = 200  # ms
 # endregion
 
 # region Initialize
@@ -36,6 +32,7 @@ stretcher = Motor(Ports.PORT6)
 
 class Controller(vex.Controller):
     is_spinning = False
+
     def drive(self):
         drive_power = self.axisA.position()
         turn_power = self.axisC.position()
@@ -44,10 +41,10 @@ class Controller(vex.Controller):
 
     def move_arm(self):
         if self.buttonFUp.pressing():
-            arm_motor.start_spin_for(ARM_STEP)
+            arm_motor.start_spin_for(FORWARD, ARM_STEP, DEGREES, 100)
             return
         if self.buttonFDown.pressing():
-            arm_motor.start_spin_for(ARM_STEP)
+            arm_motor.start_spin_for(REVERSE, ARM_STEP, DEGREES, 100)
             return
 
     def spin(self):
@@ -68,7 +65,6 @@ class Controller(vex.Controller):
             shoot_motor.stop(BrakeType.COAST)
             return
 
-
     def shooting_prepare(self):
         if self.buttonEUp.pressing():
             shoot_motor.spin_for(FORWARD, ANGLE_TO_PREPARE_STATE)
@@ -77,12 +73,10 @@ class Controller(vex.Controller):
         if self.buttonEDown.pressing():
             driver.drive_for(REVERSE, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
             driver.drive_for(FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
-    
+
     def expand_stretcher(self):
         if self.buttonLDown.pressing():
             stretcher.spin_for(FORWARD, 80, DEGREES, 100)
-
-
 
     def detect_input(self):
         self.drive()
@@ -96,7 +90,6 @@ class Controller(vex.Controller):
 
 controller = Controller()
 controller.set_deadband(DEAD_BAND)
-
 
 
 while True:
