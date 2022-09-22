@@ -106,11 +106,13 @@ class AutoDrive:
         [MoveType.Straight, 1.96],
         [MoveType.Turn, 118],
         [MoveType.Straight, 0.81],
+        [MoveType.Turn, 22],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     get_purple_dispenser_1 = [
+        [MoveType.Straight, -0.5],
         [MoveType.Turn, -90],
-        [MoveType.Straight, math.sqrt(2) / 2],
+        [MoveType.Straight, 0.8],
         [MoveType.GetDisk, DispenserType.Purple],
     ]
     shoot_1 = [
