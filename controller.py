@@ -87,4 +87,4 @@ controller.set_deadband(DEAD_BAND)
 
 while True:
     controller.detect_input()
-    spin_motor.spin(REVERSE, 100)
+    spin_motor.start_spin_for(REVERSE, 100)
