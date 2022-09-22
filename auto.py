@@ -102,9 +102,10 @@ class AutoDrive:
         [MoveType.GetDisk, DispenserType.Yellow],
     ]
     get_blue_dispenser_1 = [
-        [MoveType.Turn, 45],
-        [MoveType.Straight, 3 * math.sqrt(2) / 2],
-        [MoveType.Turn, 135],
+        [MoveType.Turn, 40],
+        [MoveType.Straight, 1.96],
+        [MoveType.Turn, 126],
+        [MoveType.Straight, 1.02],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     get_purple_dispenser_1 = [
