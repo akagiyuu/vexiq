@@ -100,7 +100,8 @@ class Helpers:
 
 class AutoDrive:
     get_yellow_dispenser = [
-        [MoveType.Turn, 90]
+        [MoveType.Straight, 2.06],  # Move until reach yellow dispenser
+        [MoveType.GetDisk, DispenserType.Yellow],
     ]
     get_blue_dispenser_1 = [
         [MoveType.Turn, 45],
