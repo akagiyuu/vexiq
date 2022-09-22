@@ -76,9 +76,7 @@ driver = Drivetrain(left_motor, right_motor, 7.85, 7.5, INCHES)
 
 spin_motor = SpinMotor(Ports.PORT10)
 arm_motor = Motor(Ports.PORT9)
-shoot_motor = ShootMotor(Ports.PORT11)
-
-color_sensor = Colorsensor(Ports.PORT8)
+shoot_motor = ShootMotor(Ports.PORT7)
 # endregion
 
 
@@ -87,15 +85,15 @@ class Helpers:
         if type == DispenserType.Purple:
             spin_motor.run()
         elif type == DispenserType.Blue:
-            arm_motor.spin_for(FORWARD, ARM_STEP)
+            arm_motor.spin_for(REVERSE, ARM_STEP)
             spin_motor.run()
         elif type == DispenserType.Yellow:
-            arm_motor.spin_for(REVERSE, ARM_STEP)
+            arm_motor.spin_for(FORWARD, ARM_STEP)
             driver.move_forward_and_back(YELLOW_DISPENSER_BACKWARD_MOVE)
-            arm_motor.start_spin_for(FORWARD, ARM_STEP)
+            arm_motor.start_spin_for(REVERSE, ARM_STEP)
             spin_motor.run()
             driver.move(-1)
-            arm_motor.spin_for(REVERSE, ARM_STEP)
+            arm_motor.spin_for(FORWARD, ARM_STEP)
 
 
 class AutoDrive:

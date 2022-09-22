@@ -1,4 +1,5 @@
 import vex
+import math
 from vex import (
     Brain, Motor, Ports, BrakeType,
     FORWARD, PERCENT, REVERSE, DEGREES, MM
@@ -26,25 +27,23 @@ driver.set_drive_velocity(100)
 spin_motor = Motor(Ports.PORT10)
 arm_motor = Motor(Ports.PORT9)
 shoot_motor = Motor(Ports.PORT11)
-stretcher = Motor(Ports.PORT6)
+stretcher = Motor(Ports.PORT7)
 # endregion
-
 
 class Controller(vex.Controller):
     is_spinning = False
 
     def drive(self):
-        drive_power = self.axisA.position()
-        turn_power = self.axisC.position()
-
+        drive_power = math.floor(self.axisA.position() / 10) * 10
+        turn_power = math.floor(self.axisC.position() / 10) * 10
         driver.arcade(drive_power, turn_power)
 
     def move_arm(self):
         if self.buttonFUp.pressing():
-            arm_motor.start_spin_for(FORWARD, ARM_STEP, DEGREES, 100)
+            arm_motor.start_spin_for(REVERSE, ARM_STEP, DEGREES, 100)
             return
         if self.buttonFDown.pressing():
-            arm_motor.start_spin_for(REVERSE, ARM_STEP, DEGREES, 100)
+            arm_motor.start_spin_for(FORWARD, ARM_STEP, DEGREES, 100)
             return
 
     def spin(self):
