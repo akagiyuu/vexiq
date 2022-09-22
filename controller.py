@@ -4,6 +4,7 @@ from vex import (
     FORWARD, PERCENT, REVERSE, DEGREES, MM
 )
 from drivetrain import Drivetrain
+import sys
 
 # region Constant
 ANGLE_TO_PREPARE_STATE = 180
@@ -29,17 +30,18 @@ shoot_motor = Motor(Ports.PORT11)
 stretcher = Motor(Ports.PORT7)
 # endregion
 
+
 class Controller(vex.Controller):
-    is_reverse = False
+    direction = 1
+
     def drive(self):
-        drive_power = self.axisA.position() / 2
-        turn_power = self.axisC.position() / 2
+        drive_power = self.direction * self.axisA.position() * 3 / 4
+        turn_power = self.axisC.position() * 3 / 4
         driver.arcade(drive_power, turn_power)
+
     def reverse_drive(self):
-        if self.buttonLUp.pressing():
-            self.is_reverse = not self.is_reverse
-            driver.left_motor.set_reversed(self.is_reverse)
-            driver.right_motor.set_reversed(self.is_reverse)
+        if self.buttonRUp.pressing():
+            self.direction = - self.direction
 
     def move_arm(self):
         if self.buttonFUp.pressing():
@@ -50,10 +52,10 @@ class Controller(vex.Controller):
             return
 
     def shoot(self):
-        if self.buttonRUp.pressing():
+        if self.buttonLUp.pressing():
             shoot_motor.spin(FORWARD, DEFAULT_VELOCITY)
             return
-        if self.buttonRDown.pressing():
+        if self.buttonLDown.pressing():
             shoot_motor.stop(BrakeType.COAST)
             return
 
@@ -67,7 +69,7 @@ class Controller(vex.Controller):
             driver.drive_for(FORWARD, YELLOW_DISPENSER_BACKWARD_MOVE, MM, 100)
 
     def expand_stretcher(self):
-        if self.buttonLDown.pressing():
+        if self.buttonRDown.pressing():
             stretcher.spin_for(FORWARD, 80, DEGREES, 100)
 
     def detect_input(self):
@@ -82,7 +84,6 @@ class Controller(vex.Controller):
 
 controller = Controller()
 controller.set_deadband(DEAD_BAND)
-
 
 while True:
     controller.detect_input()
