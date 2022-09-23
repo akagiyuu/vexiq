@@ -123,40 +123,45 @@ class AutoDrive:
         [MoveType.GetDisk, DispenserType.Yellow],
     ]
     get_blue_dispenser_1 = [
-        [MoveType.Turn, 45],
-        [MoveType.Straight, 3 * math.sqrt(2) / 2],
-        [MoveType.Turn, 135],
+        [MoveType.Turn, 40],
+        [MoveType.Straight, 1.96],
+        [MoveType.Turn, 118],
+        [MoveType.Straight, 0.81],
+        [MoveType.Turn, 22],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     get_purple_dispenser_1 = [
+        [MoveType.Straight, -0.5],
         [MoveType.Turn, -90],
-        [MoveType.Straight, math.sqrt(2) / 2],
+        [MoveType.Straight, 0.8],
         [MoveType.GetDisk, DispenserType.Purple],
     ]
     shoot_1 = [
-        [MoveType.Turn, math.atan(3/4)],
-        [MoveType.Straight, -2.5],
-        [MoveType.Turn, math.atan(4/3)],
+        [MoveType.Straight, -0.8],
+        [MoveType.Turn, 28],
+        [MoveType.Straight, -1.7],
+        [MoveType.Turn, 62],
         [MoveType.Shoot, 2000]
     ]
 
     get_blue_dispenser_2 = [
-        [MoveType.Turn, 90],
-        [MoveType.Straight, 1.5],
-        [MoveType.Turn, -90],
-        [MoveType.Straight, 2],
+        [MoveType.Turn, 72],
+        [MoveType.Straight, 1.6],
+        [MoveType.Turn, -79],
+        [MoveType.Straight, 1.11],
+        [MoveType.Turn, 8],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     get_purple_dispenser_2 = [
         [MoveType.Straight, -0.5],
         [MoveType.Turn, 90],
-        [MoveType.Straight, math.sqrt(2) / 2],
+        [MoveType.Straight, 0.8],
         [MoveType.GetDisk, DispenserType.Purple],
     ]
     shoot_2 = [
-        [MoveType.Turn, -math.atan(3/4)],
-        [MoveType.Straight, -2.5],
-        [MoveType.Turn, -math.atan(4/3)],
+        [MoveType.Turn, -22],
+        [MoveType.Straight, -2.7],
+        [MoveType.Turn, -68],
         [MoveType.Shoot, 2000]
     ]
 
