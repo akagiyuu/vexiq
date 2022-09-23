@@ -50,18 +50,39 @@ class Drivetrain(drivetrain.Drivetrain):
     def move_forward_and_back(self, distance):
         self.drive_for(REVERSE, distance, INCHES, 100)
         self.drive_for(FORWARD, distance, INCHES, 100)
-    def get_actual_turn(self, angle):
-        return angle * 3 / 2
+
+    def calibrate_angle(self, angle):
+        result = 22230690/30107  - 245888569 * angle / 5419260
+
+        #x^2
+        angle *= angle
+        result += 116198809  * angle / 108385200
+
+        #x^3
+        angle *= angle
+        result -= 27480001 * angle / 2438667000
+
+        #x^4
+        angle *= angle
+        result += 1791857 * angle / 32515560000
+
+        #x^5
+        angle *= angle
+        result -= 49531 * angle / 487733400000
+
+        print(result)
+        return result
 
     def turn(self, angle):
-        angle = self.get_actual_turn(angle)
+        angle = self.calibrate_angle(angle)
         driver.turn_for(FORWARD, angle)
-
 
 
 class SpinMotor(Motor):
     def run(self, time=TIMEOUT):
         self.spin_for_time(REVERSE, time, TimeUnits.MSEC, 100, PERCENT)
+
+
 class ShootMotor(Motor):
     def shoot(self, time):
         self.spin_for_time(FORWARD, time, TimeUnits.MSEC, 100, PERCENT)
