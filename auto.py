@@ -4,6 +4,7 @@ from vex import (
     FORWARD, PERCENT, REVERSE, DEGREES, INCHES
 )
 import drivetrain
+import sys
 
 # region Constant
 ANGLE_TO_PREPARE_STATE = 180
@@ -52,23 +53,23 @@ class Drivetrain(drivetrain.Drivetrain):
         self.drive_for(FORWARD, distance, INCHES, 100)
 
     def calibrate_angle(self, angle):
-        result = 22230690/30107  - 245888569 * angle / 5419260
+        result = 22230690/30107 - 245888569 * angle / 5419260
 
-        #x^2
+        # x^2
         angle *= angle
-        result += 116198809  * angle / 108385200
+        result += 116198809 * angle / 108385200
 
-        #x^3
+        # x^3
         angle *= angle
-        result -= 27480001 * angle / 2438667000
+        result -= 2748000 * angle / 243866700
 
-        #x^4
+        # x^4
         angle *= angle
-        result += 1791857 * angle / 32515560000
+        result += 17918 * angle / 325155600
 
-        #x^5
+        # x^5
         angle *= angle
-        result -= 49531 * angle / 487733400000
+        result -= 49 * angle / 487733400
 
         print(result)
         return result
@@ -113,21 +114,21 @@ class Helpers:
             driver.move_forward_and_back(YELLOW_DISPENSER_BACKWARD_MOVE)
             arm_motor.start_spin_for(REVERSE, ARM_STEP)
             spin_motor.run()
-            driver.move(-1)
+            driver.move(-0.5)
             arm_motor.spin_for(FORWARD, ARM_STEP)
 
 
 class AutoDrive:
     get_yellow_dispenser = [
-        [MoveType.Straight, 2.06],  # Move until reach yellow dispenser
+        [MoveType.Straight, 1.06],  # Move until reach yellow dispenser
         [MoveType.GetDisk, DispenserType.Yellow],
     ]
     get_blue_dispenser_1 = [
         [MoveType.Turn, 40],
         [MoveType.Straight, 1.96],
-        [MoveType.Turn, 118],
+        [MoveType.Turn, 120],
         [MoveType.Straight, 0.81],
-        [MoveType.Turn, 22],
+        [MoveType.Turn, 20],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     get_purple_dispenser_1 = [
@@ -175,6 +176,7 @@ class AutoDrive:
                 shoot_motor.shoot(value)
             elif move_type == MoveType.GetDisk:
                 Helpers.get_disk_from_dispenser(value)
+            sys.sleep(1)
 
     def start_moving(self):
         self.execute(self.get_yellow_dispenser)

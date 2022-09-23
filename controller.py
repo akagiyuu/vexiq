@@ -35,7 +35,7 @@ class Controller(vex.Controller):
     direction = 1
 
     def drive(self):
-        drive_power = self.direction * self.axisA.position() * 3 / 4
+        drive_power = self.direction * self.axisA.position()
         turn_power = self.axisC.position() * 3 / 4
         driver.arcade(drive_power, turn_power)
 
@@ -87,4 +87,4 @@ controller.set_deadband(DEAD_BAND)
 
 while True:
     controller.detect_input()
-    spin_motor.start_spin_for(REVERSE, 100)
+    spin_motor.spin(REVERSE, 100)
