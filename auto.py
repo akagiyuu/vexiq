@@ -4,7 +4,6 @@ from vex import (
     FORWARD, PERCENT, REVERSE, DEGREES, INCHES
 )
 import drivetrain
-import sys
 
 # region Constant
 ANGLE_TO_PREPARE_STATE = 180
@@ -182,16 +181,12 @@ class AutoDrive:
                 shoot_motor.shoot(value)
             elif move_type == MoveType.GetDisk:
                 Helpers.get_disk_from_dispenser(value)
-            sys.sleep(1)
 
     def start_moving(self):
         self.execute(self.get_yellow_dispenser)
         self.execute(self.get_blue_dispenser_1)
-        self.execute(self.get_purple_dispenser_1)
-        # self.execute(self.shoot_1)
-        # self.execute(self.get_blue_dispenser_2)
-        # self.execute(self.get_purple_dispenser_2)
-        # self.execute(self.shoot_2)
+        self.execute(self.get_blue_dispenser_2)
+        self.execute(self.shoot_1)
         self.execute(self.end)
 
 
