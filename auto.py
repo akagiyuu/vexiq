@@ -24,6 +24,7 @@ class MoveType:
     Turn = 1
     Shoot = 2
     GetDisk = 3
+    ExpandStretcher = 4
 
 
 class DispenserType:
@@ -104,7 +105,7 @@ shoot_motor = ShootMotor(Ports.PORT7)
 class Helpers:
     def get_disk_from_dispenser(type):
         if type == DispenserType.Purple:
-            spin_motor.run()
+            spin_motor.run(25000)
         elif type == DispenserType.Blue:
             arm_motor.spin_for(REVERSE, ARM_STEP)
             spin_motor.run()
@@ -164,6 +165,12 @@ class AutoDrive:
         [MoveType.Turn, -68],
         [MoveType.Shoot, 2000]
     ]
+    end = [
+        [MoveType.Turn, -90]
+        [MoveType.Straight, 2]
+        [MoveType.Turn, 90]
+        [MoveType.ExpandStretcher]
+    ]
 
     def execute(self, move_sequence):
         for move_type, value in move_sequence:
@@ -185,6 +192,7 @@ class AutoDrive:
         self.execute(self.get_blue_dispenser_2)
         self.execute(self.get_purple_dispenser_2)
         self.execute(self.shoot_2)
+        self.execute(self.end)
 
 
 auto_drive = AutoDrive()
