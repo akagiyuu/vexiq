@@ -62,7 +62,6 @@ class Drivetrain(drivetrain.Drivetrain):
         # x^3
         angle *= angle
         result -= 2748000 * angle / 243866700
-
         # x^4
         angle *= angle
         result += 17918 * angle / 325155600
