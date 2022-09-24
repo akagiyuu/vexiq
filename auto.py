@@ -144,7 +144,7 @@ class AutoDrive:
         [MoveType.Straight, -1],
         [MoveType.Turn, 65]
         [MoveType.Straight, 1.25]
-        [MoveType.Turn, 90]
+        [MoveType.Turn, -90]
         [MoveType.ExpandStretcher]
     ]
     # get_purple_dispenser_1 = [

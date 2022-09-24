@@ -1,6 +1,6 @@
 import vex
 from vex import (
-    Brain, Motor, Ports, BrakeType,
+    Brain, Motor, Ports, BrakeType, Touchled, ColorHue,
     FORWARD, PERCENT, REVERSE, DEGREES, MM
 )
 from drivetrain import Drivetrain
@@ -28,7 +28,15 @@ spin_motor = Motor(Ports.PORT10)
 arm_motor = Motor(Ports.PORT9)
 shoot_motor = Motor(Ports.PORT11)
 stretcher = Motor(Ports.PORT7)
+
+left_light = Touchled(Ports.PORT1)
+right_light = Touchled(Ports.PORT8)
 # endregion
+
+
+def blink_hue(color_left, color_right, on_time=0.25, off_time=0.25):
+    left_light.blink_hue(color_left, on_time, off_time)
+    right_light.blink_hue(color_right, on_time, off_time)
 
 
 class Controller(vex.Controller):
@@ -38,6 +46,7 @@ class Controller(vex.Controller):
         drive_power = self.direction * self.axisA.position()
         turn_power = self.axisC.position() * 2 / 3
         driver.arcade(drive_power, turn_power)
+
 
     def reverse_drive(self):
         if self.buttonRUp.pressing():
@@ -54,6 +63,7 @@ class Controller(vex.Controller):
     def shoot(self):
         if self.buttonLUp.pressing():
             shoot_motor.spin(FORWARD, DEFAULT_VELOCITY)
+            blink_hue(ColorHue.GREEN, ColorHue.ORANGE)
             return
         if self.buttonLDown.pressing():
             shoot_motor.stop(BrakeType.COAST)
@@ -61,6 +71,7 @@ class Controller(vex.Controller):
 
     def shooting_prepare(self):
         if self.buttonEUp.pressing():
+            blink_hue(ColorHue.VIOLET, ColorHue.VIOLET)
             shoot_motor.spin_for(FORWARD, ANGLE_TO_PREPARE_STATE)
 
     def get_disk_from_yellow_dispenser(self):
@@ -70,6 +81,7 @@ class Controller(vex.Controller):
 
     def expand_stretcher(self):
         if self.buttonRDown.pressing():
+            blink_hue(ColorHue.RED, ColorHue.RED)
             stretcher.spin_for(FORWARD, 160, DEGREES, 50)
 
     def detect_input(self):
