@@ -125,15 +125,15 @@ class AutoDrive:
     ]
     get_blue_dispenser_1 = [
         [MoveType.Turn, 40],
-        [MoveType.Straight, 1.96],
+        [MoveType.Straight, 1],
         [MoveType.Turn, 120],
-        [MoveType.Straight, 0.81],
-        [MoveType.Turn, 20],
+        [MoveType.Straight, 0.2],
+        [MoveType.Turn, 30],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     get_purple_dispenser_1 = [
         [MoveType.Straight, -0.5],
-        [MoveType.Turn, -90],
+        [MoveType.Turn, 80],
         [MoveType.Straight, 0.8],
         [MoveType.GetDisk, DispenserType.Purple],
     ]
@@ -166,9 +166,9 @@ class AutoDrive:
         [MoveType.Shoot, 2000]
     ]
     end = [
-        [MoveType.Turn, -90]
-        [MoveType.Straight, 2]
         [MoveType.Turn, 90]
+        [MoveType.Straight, 1.8]
+        [MoveType.Turn, -90]
         [MoveType.ExpandStretcher]
     ]
 
@@ -188,10 +188,10 @@ class AutoDrive:
         self.execute(self.get_yellow_dispenser)
         self.execute(self.get_blue_dispenser_1)
         self.execute(self.get_purple_dispenser_1)
-        self.execute(self.shoot_1)
-        self.execute(self.get_blue_dispenser_2)
-        self.execute(self.get_purple_dispenser_2)
-        self.execute(self.shoot_2)
+        # self.execute(self.shoot_1)
+        # self.execute(self.get_blue_dispenser_2)
+        # self.execute(self.get_purple_dispenser_2)
+        # self.execute(self.shoot_2)
         self.execute(self.end)
 
 

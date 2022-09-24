@@ -36,7 +36,7 @@ class Controller(vex.Controller):
 
     def drive(self):
         drive_power = self.direction * self.axisA.position()
-        turn_power = self.axisC.position() * 3 / 4
+        turn_power = self.axisC.position() * 2 / 3
         driver.arcade(drive_power, turn_power)
 
     def reverse_drive(self):
