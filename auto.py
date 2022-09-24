@@ -108,7 +108,7 @@ class AutoDrive:
     shoot_1 = [
         [MoveType.Turn, -65],
         [MoveType.Straight, -1.25],
-        [MoveType.Shoot, 2000],
+        [MoveType.Shoot, 17000],
     ]
     get_blue_dispenser_2 = [
         [MoveType.Turn, -40],
@@ -120,7 +120,7 @@ class AutoDrive:
     ]
     shoot_2 = [
         [MoveType.Turn, 20],
-        [MoveType.Shoot, 2000],
+        [MoveType.Shoot, 8500],
 
     ]
     end = [
