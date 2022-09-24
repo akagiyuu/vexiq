@@ -125,29 +125,26 @@ class AutoDrive:
     shoot_1 = [
         [MoveType.Turn, -65],
         [MoveType.Straight, -1.25],
-        [MoveType.Turn, -90],
-        [MoveType.Straight, 1.5],
-        [MoveType.Turn, 90]
         [MoveType.Shoot, 2000]
     ]
     get_blue_dispenser_2 = [
-        [MoveType.Turn, -90],
+        [MoveType.Turn, -40],
         [MoveType.Straight, 1.5],
-        [MoveType.Turn, 90],
-        [MoveType.Straight, 1.5],
-        [MoveType.Turn, 8],
+        [MoveType.Turn, 115],
+        [MoveType.Straight, 1],
         [MoveType.GetDisk, DispenserType.Blue],
     ]
     shoot_2 = [
-        [MoveType.Turn, -22],
-        [MoveType.Straight, -2.7],
-        [MoveType.Turn, -68],
+        [MoveType.Turn, 20]
         [MoveType.Shoot, 2000]
+
     ]
     end = [
+        [MoveType.Turn, -20]
+        [MoveType.Straight, -1],
+        [MoveType.Turn, 65]
+        [MoveType.Straight, 1.25]
         [MoveType.Turn, 90]
-        [MoveType.Straight, 1.8]
-        [MoveType.Turn, -90]
         [MoveType.ExpandStretcher]
     ]
     # get_purple_dispenser_1 = [
