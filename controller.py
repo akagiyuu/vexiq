@@ -70,7 +70,7 @@ class Controller(vex.Controller):
 
     def expand_stretcher(self):
         if self.buttonRDown.pressing():
-            stretcher.spin_for(FORWARD, 80, DEGREES, 100)
+            stretcher.spin_for(FORWARD, 160, DEGREES, 50)
 
     def detect_input(self):
         self.drive()

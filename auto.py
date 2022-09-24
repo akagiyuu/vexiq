@@ -22,8 +22,9 @@ class MoveType:
     Straight = 0
     Turn = 1
     Shoot = 2
-    GetDisk = 3
-    ExpandStretcher = 4
+    Arm = 3
+    GetDisk = 4
+    ExpandStretcher = 5
 
 
 class DispenserType:
@@ -78,11 +79,6 @@ class Drivetrain(drivetrain.Drivetrain):
         driver.turn_for(FORWARD, angle)
 
 
-class SpinMotor(Motor):
-    def run(self, time=TIMEOUT):
-        self.spin_for_time(REVERSE, time, TimeUnits.MSEC, 100, PERCENT)
-
-
 class ShootMotor(Motor):
     def shoot(self, time):
         self.spin_for_time(FORWARD, time, TimeUnits.MSEC, 100, PERCENT)
@@ -95,7 +91,7 @@ left_motor = Motor(Ports.PORT12)
 right_motor = Motor(Ports.PORT4, True)
 driver = Drivetrain(left_motor, right_motor, 7.85, 7.5, INCHES)
 
-spin_motor = SpinMotor(Ports.PORT10)
+spin_motor = Motor(Ports.PORT10)
 arm_motor = Motor(Ports.PORT9)
 shoot_motor = ShootMotor(Ports.PORT7)
 # endregion
@@ -103,60 +99,44 @@ shoot_motor = ShootMotor(Ports.PORT7)
 
 class Helpers:
     def get_disk_from_dispenser(type):
-        if type == DispenserType.Purple:
-            spin_motor.run(25000)
-        elif type == DispenserType.Blue:
-            arm_motor.spin_for(REVERSE, ARM_STEP)
-            spin_motor.run()
+        if type == DispenserType.Blue:
+            arm_motor.spin_for(REVERSE, ARM_STEP / 2)
         elif type == DispenserType.Yellow:
             arm_motor.spin_for(FORWARD, ARM_STEP)
             driver.move_forward_and_back(YELLOW_DISPENSER_BACKWARD_MOVE)
-            arm_motor.start_spin_for(REVERSE, ARM_STEP)
-            spin_motor.run()
-            driver.move(-0.5)
-            arm_motor.spin_for(FORWARD, ARM_STEP)
 
 
 class AutoDrive:
     get_yellow_dispenser = [
         [MoveType.Straight, 1.06],  # Move until reach yellow dispenser
         [MoveType.GetDisk, DispenserType.Yellow],
+        [MoveType.Arm, - 1 / 2]
+
     ]
     get_blue_dispenser_1 = [
-        [MoveType.Turn, 40],
-        [MoveType.Straight, 1],
-        [MoveType.Turn, 120],
-        [MoveType.Straight, 0.2],
-        [MoveType.Turn, 30],
+        [MoveType.Straight, - 0.5]
+        [MoveType.Turn, 45],
+        [MoveType.Straight, 2.25],
+        [MoveType.Turn, 135],
+        [MoveType.Arm, - ARM_STEP / 2]
+        [MoveType.Turn, 15]
         [MoveType.GetDisk, DispenserType.Blue],
-    ]
-    get_purple_dispenser_1 = [
-        [MoveType.Straight, -0.5],
-        [MoveType.Turn, 80],
-        [MoveType.Straight, 0.8],
-        [MoveType.GetDisk, DispenserType.Purple],
     ]
     shoot_1 = [
-        [MoveType.Straight, -0.8],
-        [MoveType.Turn, 28],
-        [MoveType.Straight, -1.7],
-        [MoveType.Turn, 62],
+        [MoveType.Turn, -65],
+        [MoveType.Straight, -1.25],
+        [MoveType.Turn, -90],
+        [MoveType.Straight, 1.5],
+        [MoveType.Turn, 90]
         [MoveType.Shoot, 2000]
     ]
-
     get_blue_dispenser_2 = [
-        [MoveType.Turn, 72],
-        [MoveType.Straight, 1.6],
-        [MoveType.Turn, -79],
-        [MoveType.Straight, 1.11],
+        [MoveType.Turn, -90],
+        [MoveType.Straight, 1.5],
+        [MoveType.Turn, 90],
+        [MoveType.Straight, 1.5],
         [MoveType.Turn, 8],
         [MoveType.GetDisk, DispenserType.Blue],
-    ]
-    get_purple_dispenser_2 = [
-        [MoveType.Straight, -0.5],
-        [MoveType.Turn, 90],
-        [MoveType.Straight, 0.8],
-        [MoveType.GetDisk, DispenserType.Purple],
     ]
     shoot_2 = [
         [MoveType.Turn, -22],
@@ -170,6 +150,46 @@ class AutoDrive:
         [MoveType.Turn, -90]
         [MoveType.ExpandStretcher]
     ]
+    # get_purple_dispenser_1 = [
+    #     [MoveType.Straight, -0.5],
+    #     [MoveType.Turn, 80],
+    #     [MoveType.Straight, 0.8],
+    #     [MoveType.GetDisk, DispenserType.Purple],
+    # ]
+    # shoot_1 = [
+    #     [MoveType.Straight, -0.8],
+    #     [MoveType.Turn, 28],
+    #     [MoveType.Straight, -1.7],
+    #     [MoveType.Turn, 62],
+    #     [MoveType.Shoot, 2000]
+    # ]
+
+    # get_blue_dispenser_2 = [
+    #     [MoveType.Turn, 72],
+    #     [MoveType.Straight, 1.6],
+    #     [MoveType.Turn, -79],
+    #     [MoveType.Straight, 1.11],
+    #     [MoveType.Turn, 8],
+    #     [MoveType.GetDisk, DispenserType.Blue],
+    # ]
+    # get_purple_dispenser_2 = [
+    #     [MoveType.Straight, -0.5],
+    #     [MoveType.Turn, 90],
+    #     [MoveType.Straight, 0.8],
+    #     [MoveType.GetDisk, DispenserType.Purple],
+    # ]
+    # shoot_2 = [
+    #     [MoveType.Turn, -22],
+    #     [MoveType.Straight, -2.7],
+    #     [MoveType.Turn, -68],
+    #     [MoveType.Shoot, 2000]
+    # ]
+    # end = [
+    #     [MoveType.Turn, 90]
+    #     [MoveType.Straight, 1.8]
+    #     [MoveType.Turn, -90]
+    #     [MoveType.ExpandStretcher]
+    # ]
 
     def execute(self, move_sequence):
         for move_type, value in move_sequence:
@@ -177,16 +197,24 @@ class AutoDrive:
                 driver.move(value)
             elif move_type == MoveType.Turn:
                 driver.turn(value)
+            elif move_type == MoveType.Arm:
+                arm_motor.spin_for(
+                    FORWARD,
+                    ARM_STEP * value, DEGREES,
+                    100, PERCENT
+                )
             elif move_type == MoveType.Shoot:
                 shoot_motor.shoot(value)
             elif move_type == MoveType.GetDisk:
                 Helpers.get_disk_from_dispenser(value)
 
     def start_moving(self):
+        spin_motor.spin(REVERSE, 100)
         self.execute(self.get_yellow_dispenser)
         self.execute(self.get_blue_dispenser_1)
         self.execute(self.get_blue_dispenser_2)
         self.execute(self.shoot_1)
+        self.execute(self.shoot_2)
         self.execute(self.end)
 
 
