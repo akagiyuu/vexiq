@@ -1,6 +1,5 @@
-import math
 from vex import (
-    Brain, Motor, Ports, Colorsensor, TimeUnits,
+    Brain, Motor, Ports, TimeUnits,
     FORWARD, PERCENT, REVERSE, DEGREES, INCHES
 )
 import drivetrain
@@ -66,7 +65,6 @@ left_motor = Motor(Ports.PORT12)
 right_motor = Motor(Ports.PORT4, True)
 driver = Drivetrain(left_motor, right_motor, 7.85, 7.5, INCHES)
 
-spin_motor = Motor(Ports.PORT10)
 arm_motor = Motor(Ports.PORT9)
 shoot_motor = ShootMotor(Ports.PORT11)
 stretcher = Motor(Ports.PORT7)
