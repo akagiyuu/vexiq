@@ -123,7 +123,8 @@ class AutoDrive:
         [MoveType.Straight, 0.5],
         [MoveType.Turn, 45],
         [MoveType.Straight, 2],
-        [MoveType.Turn, 150],
+        [MoveType.Turn, 140],
+        [MoveType.Straight, 0.5],
         [MoveType.GetDisk, DispenserType.Blue],
         [MoveType.Arm, 1]
     ]
